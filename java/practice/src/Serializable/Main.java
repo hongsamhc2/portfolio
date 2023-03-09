@@ -13,6 +13,8 @@ public class Main {
 
         try(ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(new File("files","test")))){
             os.writeObject(p);
+            os.flush();
+            os.close();
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -22,7 +24,7 @@ public class Main {
         try(ObjectInputStream is = new ObjectInputStream(new FileInputStream(new File("files","test")))){
             PersonSerial inputPersonObject = (PersonSerial)is.readObject();
             System.out.println(inputPersonObject.getName());
-
+            is.close();
         }catch(Exception e){
             e.printStackTrace();
         }
