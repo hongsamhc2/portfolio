@@ -1,0 +1,70 @@
+{
+	"version": "4.5.9",
+	"flags": {},
+	"shapes": [
+		{
+			"label": "tom_flower_stem_bb",
+			"points": [
+				[
+					496.0,
+					1563.0
+				],
+				[
+					627.0,
+					1641.0
+				]
+			],
+			"group_id": null,
+			"shape_type": "rectangle",
+			"flags": {}
+		},
+		{
+			"label": "tom_growth_bb",
+			"points": [
+				[
+					568.0,
+					1279.0
+				],
+				[
+					658.0,
+					1352.0
+				]
+			],
+			"group_id": null,
+			"shape_type": "rectangle",
+			"flags": {}
+		},
+		{
+			"label": "tom_growth_bb",
+			"points": [
+				[
+					738.6122448979593,
+					611.8979591836735
+				],
+				[
+					712.0816326530612,
+					534.3469387755102
+				]
+			],
+			"group_id": null,
+			"shape_type": "rectangle",
+			"flags": {}
+		}
+	],
+	"imagePath": "V001_tom1_00_052_a2_18_20220101_27_00092524_40158887.png",
+	"imageData": null,
+	"imageHeight": 1920,
+	"imageWidth": 1080,
+	"file_attributes": {
+		"fileVersion": "V001",
+		"farmId": "tom1",
+		"week": "00",
+		"number": "052",
+		"type": "a2",
+		"flowerCluster": "18",
+		"date": "20220101"
+	},
+	"growth_indicators": {
+		"heightOfTheFlowerTruss": 27.5
+	}
+}
