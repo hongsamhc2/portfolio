@@ -1,5 +1,3 @@
-!/usr/bin/python
-#coding:utf-8
 
 from collections import defaultdict
 from itertools import chain
@@ -51,8 +49,8 @@ class DoubleArrayTrie(object):
         self.base = defaultdict(int)
         self.check = defaultdict(int)
         self.tails = defaultdict(int)
-        self.next_pos = 1  # tails中下一个可插入的位置
-        self.root = 1   # root节点
+        self.next_pos = 1  
+        self.root = 1   
         for word in words:
             self.insert(word)
 
@@ -65,7 +63,7 @@ class DoubleArrayTrie(object):
     def compare_tails(self, start, word, i):
         pos = -self.base[start]
         tail1 = self.tails[pos]
-        tail2 = word[i+1:] + '#'  # 通过'#'字符来规避一个字符串是另一个字符串的子串的情况
+        tail2 = word[i+1:] + '#' 
         compare_result = True if tail1 == tail2 else False
         return compare_result, pos, tail1, tail2
 
@@ -94,14 +92,12 @@ class DoubleArrayTrie(object):
             return 'exists', [word,]
 
     def get_node_strs(self, prefix, start):
-        '''获取所有经过start节点的字符串，prefix是start节点之前的边组成的前缀字符串'''
         result = []
         for tail in self.get_node_tails(start):
             result.append(prefix+tail[:-1])
         return result
 
     def get_node_tails(self, start):
-        '''获取所有以start节点为开始的后缀字符串'''
         if self.base[start] < 0:
             return [self.tails[-self.base[start]],]
         else:
@@ -150,50 +146,40 @@ class DoubleArrayTrie(object):
             arc = self.chars[c]
             end = self.base[start] + arc
             if self.check[end] == 0:
-                # base[end]将会变成独立节点，后续字符串将会保存到tails中
                 self.write_tail(start, end, word[i+1:]+'#')
                 return True
             elif self.check[end] == start:
-                # 从start到end的有向边已存在
                 start = end
                 if self.base[start] < 0:
-                    # start是独立节点，需要比较word的后续字符串和tails中的字符串
                     compare_result, pos, tail1, tail2 = self.compare_tails(start, word, i)
                     if compare_result:
-                        # 该word已存在
                         return True
 
-                    lcp = self.longest_common_prefix(tail1, tail2)  # 找到最长公共子串
+                    lcp = self.longest_common_prefix(tail1, tail2)  
                     if lcp is not '':
                         q = self.x_check(lcp)
-                        for new_c in lcp:  # 存储公共前缀字符串
+                        for new_c in lcp:  
                             self.base[start] = q
-                            # 下一个节点
                             start = self.add_arc(new_c, start)
 
                     len_lcp = len(lcp)
-                    # x != y 一定成立
                     x, y = tail1[len_lcp:], tail2[len_lcp:]
                     q = self.x_check(x[0]+y[0])
 
                     self.base[start] = q
-                    # 将x保存到tails中
                     end = self.add_arc(x[0], start)
                     self.base[end] = -pos
                     self.tails[pos] = x[1:]
-                    # 将y保存到tails中
                     end = self.add_arc(y[0], start)
-                    self.write_tail(start, end, y[1:])  # 因为返回的tail2中已包含'#'所以此处不需要再加
+                    self.write_tail(start, end, y[1:])  
                     return True
             else:
-                # 从start到end的有向边不存在，此时发生冲突
                 old_start = self.check[end]
                 conflict = {
                     start: self.find_arcs(start),
                     old_start: self.find_arcs(old_start),
                 }
                 if len(conflict[start][0]) + 1 > len(conflict[old_start][0]):
-                    # 更改冲突较小的节点
                     change_node = old_start
                 else:
                     change_node = start
@@ -207,8 +193,7 @@ class DoubleArrayTrie(object):
                     self.base[new_end] = self.base[old_end]
                     self.check[new_end] = self.check[old_end]
                     if self.base[old_end] > 0:
-                        # 当old_end是其他节点的父节点时，需要将它对应的子节点对应的父节点更改为new_end
-                        for key, value in self.check.iteritems():  # 是否需要如同find_arcs方法中，使用遍历chars的方法？
+                        for key, value in self.check.iteritems():  
                             if value == old_end:
                                 self.check[key] = new_end
                     self.base[old_end] = self.check[old_end] = 0
@@ -227,10 +212,6 @@ class DoubleArrayTrie(object):
         return lcp
 
     def x_check(self, word):
-        '''
-        在base数组中发生冲突时，找到最近一个基准位置，确保有足够的空位保存冲突节点.
-        即，要找到一个赋值给base[start]的值，能够保证所有对应的冲突节点对应的check[end]都为0.
-        '''
         q = 1
         while 1:
             if all(self.check[q + self.chars[c]] == 0 for c in word):
@@ -245,14 +226,12 @@ class DoubleArrayTrie(object):
         self.next_pos += len(self.tails[self.next_pos])
 
     def add_arc(self, c, start):
-        '''加一条从start节点开始，边对应的字符是c的有向边'''
         arc = self.chars[c]
         end = self.base[start] + arc
         self.check[end] = start
         return end
 
     def find_arcs(self, start):
-        '''找到start节点对应的所有边和所有end节点'''
         arcs, c_list = [], []
 #        reverse_chars = {v:k for k,v in self.chars.iteritems()}
 #        for key, value in self.check.iteritems():
